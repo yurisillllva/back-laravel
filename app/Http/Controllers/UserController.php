@@ -36,4 +36,19 @@ class UserController extends Controller
 
         return new UserResource($user, array('type' => 'store', 'route' => 'users.store'));
     }
+
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        try {
+            $token = $this
+                ->user
+                ->login($credentials);
+        } catch (\Throwable | \Exception $e) {
+            return ResponseService::exception('users.login', null, $e);
+        }
+
+        return response()->json(compact('token'));
+    }
 }
